@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"pecrsuh.id/pec/application"
-	"pecrsuh.id/pec/controllers"
+	"pecrsuh.id/pec/security"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 }
 
 func setControllers(a *application.App) {
-	roleController := controllers.RoleController{DB: a.DB}
+	roleController := security.RoleController{DB: a.DB}
 
 	v1 := a.Router.Group("/api/roles")
 	{

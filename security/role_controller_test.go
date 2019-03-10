@@ -1,4 +1,4 @@
-package controllers
+package security
 
 import (
 	"encoding/json"

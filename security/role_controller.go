@@ -1,4 +1,4 @@
-package controllers
+package security
 
 import (
 	"net/http"
@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"pecrsuh.id/pec/common"
 	"pecrsuh.id/pec/models"
 )
 
@@ -20,13 +21,13 @@ type RoleController struct {
 func (a *RoleController) FindRoles(c *gin.Context) {
 	countStr, ok := c.GetQuery("count")
 	if !ok {
-		SendBadRequest(c, "No count parameter")
+		common.SendBadRequest(c, "No count parameter")
 		return
 	}
 
 	startStr, ok := c.GetQuery("start")
 	if !ok {
-		SendBadRequest(c, "No start parameter")
+		common.SendBadRequest(c, "No start parameter")
 		return
 	}
 
@@ -48,12 +49,12 @@ func (a *RoleController) CreateRole(c *gin.Context) {
 	c.BindJSON(&role)
 
 	if (len(strings.TrimSpace(role.Code)) == 0) || (len(strings.TrimSpace(role.Name)) == 0) {
-		SendBadRequest(c, "Code or Name is empty")
+		common.SendBadRequest(c, "Code or Name is empty")
 		return
 	}
 
 	if err := a.DB.Create(&role).Error; err != nil {
-		SendBadRequest(c, "Code is not unique")
+		common.SendBadRequest(c, "Code is not unique")
 		return
 	}
 
@@ -66,13 +67,13 @@ func (a *RoleController) UpdateRole(c *gin.Context) {
 	var role models.Role
 
 	if err := a.DB.Where("id = ?", id).First(&role).Error; err != nil {
-		SendNotFound(c, "Role not found")
+		common.SendNotFound(c, "Role not found")
 		return
 	}
 
 	c.BindJSON(&role)
 	if (len(strings.TrimSpace(role.Code)) == 0) || (len(strings.TrimSpace(role.Name)) == 0) {
-		SendBadRequest(c, "Code or Name is empty")
+		common.SendBadRequest(c, "Code or Name is empty")
 		return
 	}
 	a.DB.Save(&role)
@@ -86,7 +87,7 @@ func (a *RoleController) DeleteRole(c *gin.Context) {
 	var role models.Role
 
 	if err := a.DB.Where("id = ?", id).First(&role).Error; err != nil {
-		SendNotFound(c, "Role not found")
+		common.SendNotFound(c, "Role not found")
 		return
 	}
 
